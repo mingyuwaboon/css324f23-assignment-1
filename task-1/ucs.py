@@ -37,22 +37,27 @@ def uniform_cost_graph_search(problem):
     while True:
         if not frontier:
             return (None, n_visits)
+        # search next path (seccesor function)
         else:
             n_visits += 1
             _, node = heappop(frontier)
             state, _, _, path_cost, depth = node
             explored.add(state)
+            # check goal state
             if problem.is_goal(state):
                 return (node, n_visits)
+            # not goal state, find next path
             else:
                 for succ, cost in problem.successors(state):
-                    child_cost = path_cost + cost
+                    child_cost = path_cost + cost 
                     child = create_node(succ, node, "", child_cost,
                                         depth + 1)
                     if succ not in explored:
                         idx = index(frontier, succ)
+                        #if not met in explored, push in heap (meaning: find new path)
                         if idx < 0:
                             heappush(frontier, (child_cost, child))
+                        #if met in explored, if old path_cost > new path_cost, update new path_cost instead of old path_cost
                         else:
                             _, existing = frontier[idx]
                             if existing[3] > child_cost:
